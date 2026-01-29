@@ -1,0 +1,41 @@
+{
+  "name": "kai-cli",
+  "version": "0.1.0",
+  "description": "Multi-Provider Creative AI CLI for generating images, videos, and music",
+  "type": "module",
+  "bin": {
+    "kai": "./bin/kai.ts"
+  },
+  "scripts": {
+    "start": "bun run bin/kai.ts",
+    "build": "bun build ./bin/kai.ts --compile --outfile dist/kai",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "lint": "bunx @biomejs/biome check .",
+    "format": "bunx @biomejs/biome format --write ."
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "conf": "^13.0.1",
+    "ora": "^8.1.1",
+    "puppeteer-core": "24.36.1"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "typescript": "^5.7.2"
+  },
+  "keywords": [
+    "ai",
+    "cli",
+    "image-generation",
+    "video-generation",
+    "music-generation",
+    "kie.ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "bun": ">=1.0.0"
+  }
+}

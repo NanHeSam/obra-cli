@@ -20,6 +20,8 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
+      - uses: oven-sh/setup-bun@v2
+
       - run: npm install
       - run: npm run build
       - run: npm test

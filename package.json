@@ -1,6 +1,6 @@
 {
   "name": "obra",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Multi-Provider Creative AI CLI for generating images, videos, and music",
   "type": "module",
   "bin": {

@@ -34,6 +34,12 @@ All generation commands follow the same pattern:
 obra <type> generate "<prompt>" [options]
 ```
 
+Model-specific parameters are passed with `--param`:
+
+```bash
+obra <type> generate "<prompt>" --param key=value --param key2=value2
+```
+
 Without `--wait`, the command returns immediately with a task ID. With `--wait`, it polls until complete and shows the result URL.
 
 ### Image Generation
@@ -45,11 +51,18 @@ obra image generate "a red panda eating bamboo"
 # Wait for completion and get the result URL
 obra image generate "a red panda eating bamboo" --wait
 
-# With options
+# With model and parameters
 obra image generate "cyberpunk cityscape" \
-  --model flux-2 \
-  --aspect-ratio 16:9 \
-  --style cinematic \
+  --model google/imagen4-fast \
+  --param aspect_ratio=16:9 \
+  --wait
+
+# Multiple parameters
+obra image generate "portrait photo" \
+  --model qwen/text-to-image \
+  --param image_size=portrait_16_9 \
+  --param guidance_scale=5.0 \
+  --param seed=42 \
   --wait
 ```
 
@@ -57,8 +70,8 @@ obra image generate "cyberpunk cityscape" \
 
 ```bash
 obra video generate "ocean waves crashing on rocks" \
-  --duration 5 \
-  --aspect-ratio 16:9 \
+  --param duration=5 \
+  --param aspect_ratio=16:9 \
   --wait
 
 # Image-to-video (animate a reference image)
@@ -135,7 +148,7 @@ obra status abc123 --wait
 obra download abc123
 ```
 
-### Method 4: JSON Output
+### JSON Output
 
 For scripting, use `--json` to get machine-readable output:
 
@@ -157,19 +170,25 @@ Output:
 }
 ```
 
-## Checking Available Models
+## Discovering Models & Parameters
+
+Each model has different parameters. Use `info` to see what's available:
 
 ```bash
 # List all image models
 obra image list
 
-# Get details about a specific model
-obra image info flux-2
+# Get details and parameters for a specific model
+obra image info qwen/text-to-image
 
 # Same for other types
 obra video list
+obra video info grok-imagine/text-to-video
 obra music list
+obra music info V4_5
 ```
+
+The `info` command shows all available parameters and how to pass them with `--param`.
 
 ## Configuration
 
@@ -188,24 +207,19 @@ obra config get kie.apiKey    # Get a specific value (masked)
 obra config set kie.apiKey YOUR_API_KEY
 
 # Change default image model
-obra config set defaults.image.model gpt-image-1.5
-
-# Change default aspect ratio
-obra config set defaults.image.aspectRatio 16:9
+obra config set defaults.image.model google/imagen4-fast
 
 # Reset everything to defaults
 obra config reset -y
 ```
 
-### Default Settings
+### Default Models
 
-The CLI comes with sensible defaults:
-
-| Type  | Default Model   | Other Defaults        |
-|-------|-----------------|----------------------|
-| Image | flux-2          | aspect-ratio: 1:1    |
-| Video | runway          | duration: 5s         |
-| Music | suno            | duration: 60s        |
+| Type  | Default Model                  |
+|-------|--------------------------------|
+| Image | flux-2/pro-text-to-image       |
+| Video | grok-imagine/text-to-video     |
+| Music | V4_5                           |
 
 ## Provider Management
 
@@ -230,6 +244,12 @@ obra provider use kie
 | `obra music lyrics <prompt>` | Generate lyrics only |
 | `obra status <id>` | Check task status |
 | `obra download <id>` | Download task outputs |
+| `obra image list` | List available image models |
+| `obra image info <model>` | Show image model details and parameters |
+| `obra video list` | List available video models |
+| `obra video info <model>` | Show video model details and parameters |
+| `obra music list` | List available music models |
+| `obra music info <model>` | Show music model details and parameters |
 | `obra config <subcommand>` | Manage configuration |
 | `obra provider <subcommand>` | Manage providers |
 
@@ -240,6 +260,8 @@ obra provider use kie
 | `-w, --wait` | Wait for task completion |
 | `-o, --output <path>` | Output file/directory |
 | `-m, --model <name>` | Model to use |
+| `--param <key=value>` | Model parameter (repeatable) |
+| `--params-json <json>` | Model parameters as JSON |
 | `-p, --provider <name>` | Provider to use |
 | `--json` | Output as JSON |
 | `-h, --help` | Show help |

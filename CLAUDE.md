@@ -1,4 +1,4 @@
-# Kai CLI - Development Notes
+# Obra CLI - Development Notes
 
 ## Project Overview
 
@@ -8,15 +8,15 @@ CLI tool for AI content generation (image, video, music) via Kie.ai API.
 
 ```bash
 # Development
-bun run bin/kai.ts [command]
+bun run bin/obra.ts [command]
 
 # After linking globally
 bun link
-kai [command]
+obra [command]
 
 # Build standalone binary
 bun run build
-./dist/kai [command]
+./dist/obra [command]
 ```
 
 ## Testing
@@ -32,54 +32,54 @@ bun test --watch
 
 ```bash
 # Image generation
-kai image generate "prompt" --model google/imagen4-fast --aspect-ratio 16:9
-kai image list [--flat] [--json]
-kai image info <model>
+obra image generate "prompt" --model google/imagen4-fast --param aspect_ratio=16:9
+obra image list [--flat] [--json]
+obra image info <model>
 
 # Video generation (default: grok-imagine/text-to-video)
-kai video generate "prompt" --model grok-imagine/text-to-video
-kai video generate "prompt" --image ./input.jpg  # Image-to-video
-kai video list [--flat] [--json]
-kai video info <model>
+obra video generate "prompt" --model grok-imagine/text-to-video
+obra video generate "prompt" --image ./input.jpg  # Image-to-video
+obra video list [--flat] [--json]
+obra video info <model>
 
 # Music generation (Suno API)
-kai music generate "prompt" --model V4_5 [--instrumental] [--custom-mode]
-kai music lyrics "prompt"                    # Generate lyrics only
-kai music timestamps <taskId> <audioId>      # Get synced lyrics
-kai music video <taskId> <audioId>           # Create music video
-kai music list
-kai music info <model>
+obra music generate "prompt" --model V4_5 [--instrumental] [--custom-mode]
+obra music lyrics "prompt"                    # Generate lyrics only
+obra music timestamps <taskId> <audioId>      # Get synced lyrics
+obra music video <taskId> <audioId>           # Create music video
+obra music list
+obra music info <model>
 ```
 
 ### Task Management
 
 ```bash
-kai status <taskId> [--wait] [--json]
-kai download <taskId> [--output <dir>]
+obra status <taskId> [--wait] [--json]
+obra download <taskId> [--output <dir>]
 ```
 
 ### Configuration
 
 ```bash
-kai config set kie.apiKey <key>     # Required: set API key
-kai config get <key> [--unmask]
-kai config list [--unmask] [--json]
-kai config delete <key>
-kai config path                      # Shows: ~/.config/kai/config.json
-kai config reset [--yes]
+obra config set kie.apiKey <key>     # Required: set API key
+obra config get <key> [--unmask]
+obra config list [--unmask] [--json]
+obra config delete <key>
+obra config path                      # Shows: ~/.config/obra/config.json
+obra config reset [--yes]
 ```
 
 ### Providers
 
 ```bash
-kai provider list [--json]
-kai provider use <name>
-kai provider info <name>
+obra provider list [--json]
+obra provider use <name>
+obra provider info <name>
 ```
 
 ## Configuration
 
-**Location:** `~/.config/kai/config.json`
+**Location:** `~/.config/obra/config.json`
 
 **Key config paths:**
 - `providers.kie.apiKey` - API key (shorthand: `kie.apiKey`)
@@ -169,9 +169,8 @@ src/
 
 ### Parameter Passing
 
-Three methods (merged with precedence: flags > JSON > pairs):
+Two methods (merged with precedence: JSON > pairs):
 ```bash
---aspect-ratio 16:9                    # Option flags
 --param key=value                      # Generic parameters (repeatable)
 --params-json '{"key":"value"}'        # JSON parameters
 ```

@@ -32,12 +32,23 @@ export function printKieModelDocumentation(
   const requiredFlags = requiredParams
     .map(param => `--param ${param.name}=<${param.type}>`)
     .join(' ');
-  const usageLine = `kai ${command} generate ${usagePrompt} --model ${model.modelId}` +
+  const usageLine = `obra ${command} generate ${usagePrompt} --model ${model.modelId}` +
     (requiredFlags ? ` ${requiredFlags}` : '');
   console.log(`  ${chalk.cyan(usageLine)}`);
 
   console.log(`\n${chalk.bold('Parameters:')}`);
+  console.log(`  ${chalk.dim('Use --param <name>=<value> to set parameters (repeatable)')}`);
+  const optionalParams = model.params.input.filter(
+    param => param.name !== 'prompt' && !param.required
+  );
+  if (optionalParams.length > 0) {
+    const example = optionalParams[0];
+    const exampleValue = example.options?.[0] ?? `<${example.type}>`;
+    console.log(`  ${chalk.dim(`Example: --param ${example.name}=${exampleValue}`)}`);
+  }
+  console.log('');
   for (const param of model.params.input) {
+    if (param.name === 'prompt') continue;
     printParam(param);
   }
 }

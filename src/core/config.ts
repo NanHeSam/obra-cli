@@ -21,7 +21,7 @@ const defaultConfig: AppConfig = {
 };
 
 const config = new Conf<AppConfig>({
-  projectName: 'kai',
+  projectName: 'obra',
   defaults: defaultConfig,
 });
 

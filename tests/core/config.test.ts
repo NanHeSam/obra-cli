@@ -63,7 +63,7 @@ describe('Config Management', () => {
     const path = getConfigPath();
     expect(typeof path).toBe('string');
     expect(path.length).toBeGreaterThan(0);
-    expect(path).toContain('kai');
+    expect(path).toContain('obra');
   });
 
   test('getDefaultProvider returns default provider', () => {

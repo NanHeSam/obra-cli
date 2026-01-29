@@ -48,8 +48,8 @@ export function registerProviderCommand(program: Command): void {
         printTable(headers, rows);
 
         console.log();
-        info('Set API key: kai config set <provider>.apiKey <key>');
-        info('Set default: kai provider use <name>');
+        info('Set API key: obra config set <provider>.apiKey <key>');
+        info('Set default: obra provider use <name>');
       }
     });
 

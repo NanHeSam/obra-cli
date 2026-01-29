@@ -92,7 +92,7 @@ export function registerConfigCommand(program: Command): void {
         } else {
           heading('Configuration:');
           console.log();
-          printConfigObject(config, '');
+          printConfigObject(config as Record<string, unknown>, '');
         }
       } catch (err) {
         error(`Failed to list config: ${(err as Error).message}`);

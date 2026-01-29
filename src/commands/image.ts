@@ -25,10 +25,6 @@ export function registerImageCommand(program: Command): void {
     .command('generate [prompt]')
     .description('Generate an image from a text prompt')
     .option('-m, --model <model>', 'Model to use')
-    .option('-a, --aspect-ratio <ratio>', 'Aspect ratio (e.g., 16:9, 1:1, 9:16)')
-    .option('-s, --style <style>', 'Style preset')
-    .option('-n, --negative-prompt <prompt>', 'What to avoid')
-    .option('--seed <number>', 'Random seed for reproducibility', parseInt)
     .option('-o, --output <path>', 'Output file path')
     .option('--param <key=value>', 'Model parameter override (repeatable)', (value, previous) => {
       previous.push(value);
@@ -55,29 +51,8 @@ export function registerImageCommand(program: Command): void {
         }
 
         const model = options.model || defaults.model || 'flux-2/pro-text-to-image';
-        const kieModel = provider.name === 'kie' ? getKieModelById(model) : undefined;
-        const kieSupportsAspectRatio = kieModel
-          ? kieModel.params.input.some(param => param.name === 'aspect_ratio')
-          : true;
         const params: Record<string, unknown> = {};
         if (prompt) params.prompt = prompt;
-        if (options.aspectRatio) {
-          if (!kieSupportsAspectRatio) {
-            const hasImageSize = kieModel?.params.input.some(
-              param => param.name === 'image_size'
-            );
-            const suggestion = hasImageSize
-              ? ' Use --param image_size=<value> instead.'
-              : '';
-            throw new Error(
-              `Model "${model}" does not support aspect_ratio.${suggestion}`
-            );
-          }
-          params.aspect_ratio = options.aspectRatio;
-        }
-        if (options.style) params.style = options.style;
-        if (options.negativePrompt) params.negative_prompt = options.negativePrompt;
-        if (options.seed !== undefined) params.seed = options.seed;
         if (options.callbackUrl) params.callBackUrl = options.callbackUrl;
 
         const jsonParams = parseJsonParams(options.paramsJson);
@@ -112,7 +87,7 @@ export function registerImageCommand(program: Command): void {
 
             if (result.status === 'success' && result.outputs.length > 0) {
               if (options.output) {
-                info(`Download the image using: kai download ${task.id} --output ${options.output}`);
+                info(`Download the image using: obra download ${task.id} --output ${options.output}`);
               }
             }
           }
@@ -124,8 +99,8 @@ export function registerImageCommand(program: Command): void {
           if (options.json) {
             printJson({ taskId: task.id, status: task.status });
           } else {
-            info(`Check status: kai status ${task.id}`);
-            info(`Wait for completion: kai status ${task.id} --wait`);
+            info(`Check status: obra status ${task.id}`);
+            info(`Wait for completion: obra status ${task.id} --wait`);
           }
         }
       } catch (err) {
@@ -178,7 +153,7 @@ export function registerImageCommand(program: Command): void {
       try {
         const modelInfo = getKieModelById(model);
         if (!modelInfo) {
-          throw new Error(`Model "${model}" not found. Run: kai image list`);
+          throw new Error(`Model "${model}" not found. Run: obra image list`);
         }
 
         if (options.json) {

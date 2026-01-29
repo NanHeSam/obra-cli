@@ -72,7 +72,7 @@ export class KieClient {
     const config = getProviderConfig('kie');
     if (!config?.apiKey) {
       throw new Error(
-        'Kie.ai API key not configured. Run: kai config set kie.apiKey <your-api-key>'
+        'Kie.ai API key not configured. Run: obra config set kie.apiKey <your-api-key>'
       );
     }
     return config.apiKey;

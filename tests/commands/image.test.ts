@@ -127,10 +127,6 @@ describe('Image Command', () => {
     const optionNames = options.map(o => o.long);
 
     expect(optionNames).toContain('--model');
-    expect(optionNames).toContain('--aspect-ratio');
-    expect(optionNames).toContain('--style');
-    expect(optionNames).toContain('--negative-prompt');
-    expect(optionNames).toContain('--seed');
     expect(optionNames).toContain('--output');
     expect(optionNames).toContain('--wait');
     expect(optionNames).toContain('--provider');
@@ -202,9 +198,6 @@ describe('Command Structure', () => {
 
     const shortOptions = options.map(o => o.short).filter(Boolean);
     expect(shortOptions).toContain('-m');
-    expect(shortOptions).toContain('-a');
-    expect(shortOptions).toContain('-s');
-    expect(shortOptions).toContain('-n');
     expect(shortOptions).toContain('-o');
     expect(shortOptions).toContain('-w');
     expect(shortOptions).toContain('-p');

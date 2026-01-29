@@ -1,14 +1,20 @@
 {
-  "name": "kai-cli",
+  "name": "obra",
   "version": "0.1.0",
   "description": "Multi-Provider Creative AI CLI for generating images, videos, and music",
   "type": "module",
   "bin": {
-    "kai": "./bin/kai.ts"
+    "obra": "./dist/bin/obra.js"
   },
+  "main": "./dist/src/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "start": "bun run bin/kai.ts",
-    "build": "bun build ./bin/kai.ts --compile --outfile dist/kai",
+    "start": "bun run bin/obra.ts",
+    "build": "tsc",
+    "build:binary": "bun build ./bin/obra.ts --compile --outfile dist/obra",
+    "prepublishOnly": "npm run build",
     "test": "bun test",
     "test:watch": "bun test --watch",
     "lint": "bunx @biomejs/biome check .",
@@ -23,6 +29,7 @@
   },
   "devDependencies": {
     "@types/bun": "^1.1.14",
+    "@types/node": "^22.0.0",
     "typescript": "^5.7.2"
   },
   "keywords": [
@@ -31,11 +38,12 @@
     "image-generation",
     "video-generation",
     "music-generation",
+    "creative-ai",
     "kie.ai"
   ],
   "author": "",
   "license": "MIT",
   "engines": {
-    "bun": ">=1.0.0"
+    "node": ">=18.0.0"
   }
 }

@@ -281,7 +281,7 @@ export function registerMusicCommand(program: Command): void {
             }
 
             if (result.status === 'success' && result.outputs.length > 0) {
-              info(`Use 'kai music timestamps ${taskId} <audioId>' to get synchronized lyrics`);
+              info(`Use 'obra music timestamps ${taskId} <audioId>' to get synchronized lyrics`);
             }
           }
 
@@ -292,8 +292,8 @@ export function registerMusicCommand(program: Command): void {
           if (options.json) {
             printJson({ taskId, status: 'pending' });
           } else {
-            info(`Check status: kai status ${taskId}`);
-            info(`Wait for completion: kai music generate <prompt> --wait`);
+            info(`Check status: obra status ${taskId}`);
+            info(`Wait for completion: obra music generate <prompt> --wait`);
           }
         }
       } catch (err) {
@@ -409,7 +409,7 @@ export function registerMusicCommand(program: Command): void {
           if (options.json) {
             printJson({ taskId, status: 'pending' });
           } else {
-            info(`Check status: kai status ${taskId}`);
+            info(`Check status: obra status ${taskId}`);
           }
         }
       } catch (err) {
@@ -584,8 +584,8 @@ export function registerMusicCommand(program: Command): void {
           if (options.json) {
             printJson({ taskId: videoTaskId, status: 'pending' });
           } else {
-            info(`Check status: kai status ${videoTaskId}`);
-            info(`Wait for completion: kai music video ${taskId} ${audioId} --wait`);
+            info(`Check status: obra status ${videoTaskId}`);
+            info(`Wait for completion: obra music video ${taskId} ${audioId} --wait`);
           }
         }
       } catch (err) {

@@ -40,7 +40,7 @@ export class KieProvider extends BaseProvider {
     if (type === 'image' || type === 'video') {
       const kieModel = getKieModelById(model);
       if (!kieModel) {
-        throw new Error(`Model "${model}" not found. Run: kai ${type} list`);
+        throw new Error(`Model "${model}" not found. Run: obra ${type} list`);
       }
 
       if (kieModel.category !== type) {
@@ -70,7 +70,7 @@ export class KieProvider extends BaseProvider {
     // Non image/video tasks (static model list)
     const modelInfo = getStaticModelById(model);
     if (!modelInfo) {
-      throw new Error(`Model "${model}" not found. Run: kai ${type} list`);
+      throw new Error(`Model "${model}" not found. Run: obra ${type} list`);
     }
 
     if (modelInfo.type !== type) {
@@ -188,7 +188,7 @@ export class KieProvider extends BaseProvider {
     const errors: string[] = [];
 
     if (!this.client.isConfigured()) {
-      errors.push('API key not configured. Run: kai config set kie.apiKey <your-api-key>');
+      errors.push('API key not configured. Run: obra config set kie.apiKey <your-api-key>');
     }
 
     return {

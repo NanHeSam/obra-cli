@@ -10,7 +10,7 @@ import { registerDownloadCommand } from './commands/download.js';
 const program = new Command();
 
 program
-  .name('kai')
+  .name('obra')
   .description('Multi-Provider Creative AI CLI for generating images, videos, and music')
   .version('0.1.0');
 

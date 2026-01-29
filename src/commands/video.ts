@@ -25,10 +25,7 @@ export function registerVideoCommand(program: Command): void {
     .description('Generate a video from a text prompt')
     .option('--prompt <prompt>', 'Prompt text (alternative to positional argument)')
     .option('-m, --model <model>', 'Model to use')
-    .option('-d, --duration <seconds>', 'Duration in seconds', parseInt)
-    .option('-a, --aspect-ratio <ratio>', 'Aspect ratio (e.g., 16:9, 9:16)')
     .option('-i, --image <path>', 'Reference image for image-to-video')
-    .option('--fps <number>', 'Frames per second', parseInt)
     .option('-o, --output <path>', 'Output file path')
     .option('--param <key=value>', 'Model parameter override (repeatable)', (value, previous) => {
       previous.push(value);
@@ -53,10 +50,6 @@ export function registerVideoCommand(program: Command): void {
         }
 
         const model = options.model || 'grok-imagine/text-to-video';
-        const kieModel = provider.name === 'kie' ? getKieModelById(model) : undefined;
-        const kieSupportsDuration = kieModel
-          ? kieModel.params.input.some(param => param.name === 'duration')
-          : true;
         const params: Record<string, unknown> = {};
         const resolvedPrompt = options.prompt ?? prompt;
         if (!resolvedPrompt) {
@@ -65,15 +58,7 @@ export function registerVideoCommand(program: Command): void {
           process.exit(1);
         }
         params.prompt = resolvedPrompt;
-        if (options.duration !== undefined) {
-          if (!kieSupportsDuration) {
-            throw new Error(`Model "${model}" does not support duration.`);
-          }
-          params.duration = options.duration;
-        }
-        if (options.aspectRatio) params.aspect_ratio = options.aspectRatio;
         if (options.image) params.image_url = options.image;
-        if (options.fps !== undefined) params.fps = options.fps;
         if (options.callbackUrl) params.callBackUrl = options.callbackUrl;
 
         const jsonParams = parseJsonParams(options.paramsJson);
@@ -110,7 +95,7 @@ export function registerVideoCommand(program: Command): void {
 
             if (result.status === 'success' && result.outputs.length > 0) {
               if (options.output) {
-                info(`Download the video using: kai download ${task.id} --output ${options.output}`);
+                info(`Download the video using: obra download ${task.id} --output ${options.output}`);
               }
             }
           }
@@ -122,8 +107,8 @@ export function registerVideoCommand(program: Command): void {
           if (options.json) {
             printJson({ taskId: task.id, status: task.status });
           } else {
-            info(`Check status: kai status ${task.id}`);
-            info(`Wait for completion: kai status ${task.id} --wait`);
+            info(`Check status: obra status ${task.id}`);
+            info(`Wait for completion: obra status ${task.id} --wait`);
           }
         }
       } catch (err) {
@@ -176,7 +161,7 @@ export function registerVideoCommand(program: Command): void {
       try {
         const modelInfo = getKieModelById(model);
         if (!modelInfo) {
-          throw new Error(`Model "${model}" not found. Run: kai video list`);
+          throw new Error(`Model "${model}" not found. Run: obra video list`);
         }
 
         if (options.json) {

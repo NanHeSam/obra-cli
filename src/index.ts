@@ -6,13 +6,14 @@ import { registerMusicCommand } from './commands/music.js';
 import { registerStatusCommand } from './commands/status.js';
 import { registerProviderCommand } from './commands/provider.js';
 import { registerDownloadCommand } from './commands/download.js';
+import { registerHistoryCommand } from './commands/history.js';
 
 const program = new Command();
 
 program
   .name('obra')
   .description('Multi-Provider Creative AI CLI for generating images, videos, and music')
-  .version('0.1.0');
+  .version('0.2.0');
 
 // Register all commands
 registerConfigCommand(program);
@@ -22,6 +23,7 @@ registerMusicCommand(program);
 registerStatusCommand(program);
 registerProviderCommand(program);
 registerDownloadCommand(program);
+registerHistoryCommand(program);
 
 export function run() {
   program.parse(process.argv);

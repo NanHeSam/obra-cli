@@ -10,7 +10,7 @@ npm install -g obra
 
 ### Set Up Your API Key
 
-Get your API key from [Kie.ai](https://kie.ai) and configure it:
+Obra currently uses [Kie.ai](https://kie.ai?ref=c2da144bbe4d6e4fd845ed3ff8c18e4c) as its AI provider. Sign up for an account and grab your API key from [https://kie.ai/api-key](https://kie.ai/api-key), then configure it:
 
 ```bash
 obra config set kie.apiKey YOUR_API_KEY
@@ -170,6 +170,31 @@ Output:
 }
 ```
 
+## Generation History
+
+Obra automatically tracks your generations locally.
+
+```bash
+# List recent generations
+obra history list
+
+# Filter by type or status
+obra history list --type image --status success
+
+# Show fewer/more entries (default: 20)
+obra history list --limit 5
+
+# Show details for a specific entry (by row number or task ID)
+obra history show 3
+obra history show abc123
+
+# Clear all history
+obra history clear --yes
+
+# Show where history is stored
+obra history path
+```
+
 ## Discovering Models & Parameters
 
 Each model has different parameters. Use `info` to see what's available:
@@ -250,6 +275,9 @@ obra provider use kie
 | `obra video info <model>` | Show video model details and parameters |
 | `obra music list` | List available music models |
 | `obra music info <model>` | Show music model details and parameters |
+| `obra history list` | List recent generations |
+| `obra history show <ref>` | Show details of a history entry |
+| `obra history clear` | Clear all history |
 | `obra config <subcommand>` | Manage configuration |
 | `obra provider <subcommand>` | Manage providers |
 

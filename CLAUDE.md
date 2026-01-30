@@ -58,6 +58,15 @@ obra status <taskId> [--wait] [--json]
 obra download <taskId> [--output <dir>]
 ```
 
+### History
+
+```bash
+obra history list [-l <n>] [-t <type>] [-s <status>] [--json]
+obra history show <ref>    # ref = row number or task ID
+obra history clear [--yes]
+obra history path
+```
+
 ### Configuration
 
 ```bash
@@ -142,9 +151,11 @@ src/
 │   ├── download.ts
 │   ├── config.ts
 │   ├── provider.ts
+│   ├── history.ts        # Generation history commands
 │   └── params.ts         # Parameter parsing utilities
 ├── core/
 │   ├── config.ts         # Configuration management
+│   ├── history.ts        # History storage & querying
 │   ├── types.ts          # Core domain types
 │   ├── output.ts         # Formatted output helpers
 │   └── download.ts       # File download utilities
@@ -186,3 +197,15 @@ Default: 2s interval, exponential backoff (max 10s), 10 minute timeout.
 ### Output Modes
 
 All commands support `--json` for machine-readable output and `--wait` to poll until completion.
+
+## Publishing
+
+**Never publish manually.** Publishing is handled automatically by GitHub Actions when a version tag is pushed.
+
+To release a new version:
+
+1. Update `version` in `package.json`
+2. Update `.version()` in `src/index.ts` to match
+3. Commit the changes
+4. Create and push a git tag: `git tag v<version> && git push origin v<version>`
+5. GitHub Actions will build, test, and publish to npm automatically

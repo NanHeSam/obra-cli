@@ -14,6 +14,7 @@ import { getKieModelById, getKieModelsByType, groupModelsByFamily, getModelInfoB
 import { printKieModelDocumentation, printKieModelValidationError } from '../providers/kie/output.js';
 import { KieModelValidationError } from '../providers/kie/model-validation.js';
 import { parseJsonParams, parseParamPairs } from './params.js';
+import { addHistoryEntry, updateHistoryEntry } from '../core/history.js';
 
 export function registerImageCommand(program: Command): void {
   const imageCmd = program
@@ -66,6 +67,17 @@ export function registerImageCommand(program: Command): void {
 
         spin.succeed(`Task created: ${task.id}`);
 
+        addHistoryEntry({
+          taskId: task.id,
+          command: 'image:generate',
+          model,
+          prompt: mergedParams.prompt as string || '',
+          params: mergedParams,
+          provider: provider.name,
+          timestamp: new Date().toISOString(),
+          status: 'pending',
+        });
+
         if (options.wait) {
           const waitSpin = spinner('Generating image...');
           waitSpin.start();
@@ -79,6 +91,12 @@ export function registerImageCommand(program: Command): void {
           });
 
           waitSpin.stop();
+
+          updateHistoryEntry(task.id, {
+            status: result.status === 'success' ? 'success' : 'fail',
+            outputs: result.outputs,
+            error: result.error,
+          });
 
           if (options.json) {
             printJson(result);

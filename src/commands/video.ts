@@ -13,6 +13,7 @@ import { getKieModelById, getKieModelsByType, groupModelsByFamily, getModelInfoB
 import { printKieModelDocumentation, printKieModelValidationError } from '../providers/kie/output.js';
 import { KieModelValidationError } from '../providers/kie/model-validation.js';
 import { parseJsonParams, parseParamPairs } from './params.js';
+import { addHistoryEntry, updateHistoryEntry } from '../core/history.js';
 
 export function registerVideoCommand(program: Command): void {
   const videoCmd = program
@@ -72,6 +73,17 @@ export function registerVideoCommand(program: Command): void {
 
         spin.succeed(`Task created: ${task.id}`);
 
+        addHistoryEntry({
+          taskId: task.id,
+          command: 'video:generate',
+          model,
+          prompt: resolvedPrompt,
+          params: mergedParams,
+          provider: provider.name,
+          timestamp: new Date().toISOString(),
+          status: 'pending',
+        });
+
         if (options.wait) {
           const waitSpin = spinner('Generating video...');
           waitSpin.start();
@@ -87,6 +99,12 @@ export function registerVideoCommand(program: Command): void {
           });
 
           waitSpin.stop();
+
+          updateHistoryEntry(task.id, {
+            status: result.status === 'success' ? 'success' : 'fail',
+            outputs: result.outputs,
+            error: result.error,
+          });
 
           if (options.json) {
             printJson(result);

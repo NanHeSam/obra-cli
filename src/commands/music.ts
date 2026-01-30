@@ -14,6 +14,7 @@ import {
 import { KieClient } from '../providers/kie/client.js';
 import { poll } from '../utils/polling.js';
 import type { TaskStatus, TaskResult } from '../core/types.js';
+import { addHistoryEntry, updateHistoryEntry } from '../core/history.js';
 
 // Default callback URL (placeholder - Suno requires it but CLI doesn't use callbacks)
 const DEFAULT_CALLBACK_URL = 'https://api.example.com/callback';
@@ -225,6 +226,17 @@ export function registerMusicCommand(program: Command): void {
         const taskId = response.data.taskId;
         spin.succeed(`Task created: ${taskId}`);
 
+        addHistoryEntry({
+          taskId,
+          command: 'music:generate',
+          model,
+          prompt,
+          params: { customMode, instrumental, style: options.style, title: options.title },
+          provider: provider.name,
+          timestamp: new Date().toISOString(),
+          status: 'pending',
+        });
+
         if (callBackUrl === DEFAULT_CALLBACK_URL) {
           info(`Note: Using default callback URL. Set --callback-url for production use.`);
         }
@@ -259,6 +271,12 @@ export function registerMusicCommand(program: Command): void {
             finalResponse.data.status
           );
 
+          updateHistoryEntry(taskId, {
+            status: result.status === 'success' ? 'success' : 'fail',
+            outputs: result.outputs,
+            error: result.error,
+          });
+
           if (options.json) {
             printJson({
               ...result,
@@ -266,7 +284,7 @@ export function registerMusicCommand(program: Command): void {
             });
           } else {
             printTaskResult(result);
-            
+
             // Print additional metadata
             if (result.metadata) {
               console.log('\nGenerated tracks:');
@@ -336,6 +354,17 @@ export function registerMusicCommand(program: Command): void {
 
         const taskId = response.data.taskId;
 
+        addHistoryEntry({
+          taskId,
+          command: 'music:lyrics',
+          model: 'suno',
+          prompt,
+          params: {},
+          provider: provider.name,
+          timestamp: new Date().toISOString(),
+          status: 'pending',
+        });
+
         if (callBackUrl === DEFAULT_CALLBACK_URL) {
           info(`Note: Using default callback URL. Set --callback-url for production use.`);
         }
@@ -383,6 +412,12 @@ export function registerMusicCommand(program: Command): void {
             finalResponse.data.status
           );
 
+          updateHistoryEntry(taskId, {
+            status: result.status === 'success' ? 'success' : 'fail',
+            outputs: result.outputs,
+            error: result.error,
+          });
+
           if (options.json) {
             printJson({
               ...result,
@@ -390,7 +425,7 @@ export function registerMusicCommand(program: Command): void {
             });
           } else {
             printTaskResult(result);
-            
+
             // Print lyrics content
             if (result.metadata?.lyrics) {
               console.log('\nGenerated lyrics:');
@@ -514,6 +549,17 @@ export function registerMusicCommand(program: Command): void {
         const videoTaskId = response.data.taskId;
         spin.succeed(`Video task created: ${videoTaskId}`);
 
+        addHistoryEntry({
+          taskId: videoTaskId,
+          command: 'music:video',
+          model: 'suno',
+          prompt: `video for task:${taskId} audio:${audioId}`,
+          params: { sourceTaskId: taskId, audioId, author: options.author, domain: options.domain },
+          provider: provider.name,
+          timestamp: new Date().toISOString(),
+          status: 'pending',
+        });
+
         if (callBackUrl === DEFAULT_CALLBACK_URL) {
           info(`Note: Using default callback URL. Set --callback-url for production use.`);
         }
@@ -557,6 +603,12 @@ export function registerMusicCommand(program: Command): void {
           // Get final result
           const finalResponse = await client.getMusicVideoStatus(videoTaskId);
           const videoUrl = finalResponse.data.response?.videoUrl;
+
+          updateHistoryEntry(videoTaskId, {
+            status: finalStatus.status === 'success' ? 'success' : 'fail',
+            outputs: videoUrl ? [{ url: videoUrl, type: 'video' }] : [],
+            error: finalResponse.data.errorMessage || undefined,
+          });
 
           if (options.json) {
             printJson({
